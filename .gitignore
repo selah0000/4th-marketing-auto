@@ -1,0 +1,11 @@
+.env
+.env.*
+*.env
+private/
+**/private/
+credentials*.json
+token*.json
+*secret*
+node_modules/
+__pycache__/
+.DS_Store
