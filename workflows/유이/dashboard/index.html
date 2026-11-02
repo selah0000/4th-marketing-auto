@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>유이 콘텐츠 팀</title>
+<style>
+:root{
+  --bg:#f6f5f2; --panel:#ffffff; --ink:#1f2328; --muted:#6a6f76; --line:#e3e1dc;
+  --accent:#3b6fd8; --accent-soft:#e8effc;
+  --hcp:#2f8f6b; --hcp-soft:#e4f3ec; --pub:#c0632b; --pub-soft:#fbeadf;
+  --ok:#2f8f6b; --watch:#b8860b; --fix:#c0632b; --stop:#c23b3b; --unk:#8a8f96;
+  --ok-soft:#e4f3ec; --watch-soft:#fbf3dc; --fix-soft:#fbeadf; --stop-soft:#fbe4e4; --unk-soft:#eeeeee;
+  --floor:#efece6; --desk:#fffdf8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16181b; --panel:#1f2226; --ink:#e8e9ea; --muted:#9aa0a7; --line:#33373c;
+    --accent:#7aa2f7; --accent-soft:#25304a;
+    --hcp:#5cc49b; --hcp-soft:#1e3a30; --pub:#f0965a; --pub-soft:#3d2a1e;
+    --ok:#5cc49b; --watch:#e0b84a; --fix:#f0965a; --stop:#f07a7a; --unk:#9aa0a7;
+    --ok-soft:#1e3a30; --watch-soft:#3a3320; --fix-soft:#3d2a1e; --stop-soft:#3f2224; --unk-soft:#2a2d31;
+    --floor:#1b1d20; --desk:#24272b;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16181b; --panel:#1f2226; --ink:#e8e9ea; --muted:#9aa0a7; --line:#33373c;
+  --accent:#7aa2f7; --accent-soft:#25304a;
+  --hcp:#5cc49b; --hcp-soft:#1e3a30; --pub:#f0965a; --pub-soft:#3d2a1e;
+  --ok:#5cc49b; --watch:#e0b84a; --fix:#f0965a; --stop:#f07a7a; --unk:#9aa0a7;
+  --ok-soft:#1e3a30; --watch-soft:#3a3320; --fix-soft:#3d2a1e; --stop-soft:#3f2224; --unk-soft:#2a2d31;
+  --floor:#1b1d20; --desk:#24272b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:12px 16px}
+.wrap{max-width:1200px;margin:0 auto}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+h1{font-size:17px;margin:0}
+.sub{color:var(--muted);font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);padding:6px 12px;font:inherit;cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
+nav.tabs{display:flex;gap:4px;margin-top:10px;overflow-x:auto}
+nav.tabs button{border:0;background:transparent;color:var(--muted);padding:7px 12px;border-radius:8px 8px 0 0;font:inherit;cursor:pointer;white-space:nowrap}
+nav.tabs button.on{color:var(--ink);background:var(--bg);font-weight:600}
+nav.tabs button[disabled]{opacity:.45;cursor:default}
+main{padding:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.card h2{font-size:15px;margin:0 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:6px 12px;border-radius:8px;font:inherit;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.v-유지{background:var(--ok-soft);color:var(--ok)}
+.v-지켜보기{background:var(--watch-soft);color:var(--watch)}
+.v-수정{background:var(--fix-soft);color:var(--fix)}
+.v-중단후보{background:var(--stop-soft);color:var(--stop)}
+.v-아직모름,.v-목표없음{background:var(--unk-soft);color:var(--unk)}
+.aud-HCP{background:var(--hcp-soft);color:var(--hcp)}
+.aud-대중{background:var(--pub-soft);color:var(--pub)}
+.aud-공통{background:var(--accent-soft);color:var(--accent)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;white-space:nowrap}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:10px}
+.tile b{display:block;font-size:22px}
+.matrix td,.matrix th{text-align:center}
+.matrix td:first-child,.matrix th:first-child{text-align:left}
+.cell{display:flex;flex-direction:column;align-items:center;gap:2px}
+.err{background:var(--stop-soft);color:var(--stop);border-radius:8px;padding:8px 10px;margin-top:8px}
+textarea{width:100%;min-height:150px;font:12px/1.4 ui-monospace,Consolas,monospace;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
+input[type=number],input[type=text]{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 6px;font:inherit}
+input[type=number]{width:72px}
+details>summary{cursor:pointer;font-weight:600}
+.prop{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px}
+.prop.done{opacity:.6}
+.prop .row input[type=text]{flex:1;min-width:160px}
+/* office */
+.office{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;background:var(--floor);padding:12px;border-radius:14px}
+.room{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:10px;min-height:120px}
+.room h3{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.room.span2{grid-column:span 2}
+.desk{background:var(--desk);border:1px solid var(--line);border-radius:10px;padding:8px;margin-bottom:8px;transition:opacity .3s}
+.desk.dim{opacity:.3}
+.desk .who{display:flex;align-items:center;gap:6px;font-weight:600}
+.avatar{font-size:22px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--unk)}
+.st-작업중 .dot{background:var(--ok);animation:pulse 1s infinite}
+.st-승인대기 .dot{background:var(--watch)}
+.st-막힘 .dot{background:var(--stop)}
+@keyframes pulse{50%{opacity:.3}}
+.task{font-size:12px;margin-top:4px}
+.bubble{background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:8px 10px;font-size:12px;margin-top:6px}
+.bubble li{margin-left:-14px}
+.log{max-height:260px;overflow:auto;font-size:12px}
+.log div{padding:4px 0;border-bottom:1px solid var(--line)}
+.inbox b{font-size:28px}
+@media (max-width:820px){.office{grid-template-columns:1fr 1fr}.room.span2{grid-column:span 2}}
+@media (max-width:520px){.office{grid-template-columns:1fr}.room.span2{grid-column:span 1}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="top">
+    <div><h1>유이 콘텐츠 팀 · 종합 대시보드</h1>
+      <div class="sub">프로토타입 · 모든 숫자는 샘플(가짜) 데이터예요 · 원칙 출처: 스폰지클럽 워크플로우 스타트킷 · 에밀리의 ROY 키트(BYEM)</div></div>
+    <div class="seg" id="audSeg">
+      <button data-aud="all" class="on">전체</button><button data-aud="HCP">약사 · HCP</button><button data-aud="대중">대중</button>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-tab="office" class="on">🏢 사무실</button>
+    <button data-tab="perf">📊 성과 진단</button>
+    <button disabled title="다음 단계">기획</button><button disabled title="다음 단계">제작 스튜디오</button>
+    <button disabled title="다음 단계">리뷰</button><button disabled title="다음 단계">러닝</button>
+  </nav>
+</div></header>
+
+<main><div class="wrap">
+  <section id="office"></section>
+  <section id="perf" hidden></section>
+</div></main>
+
+<script>
+// ── 채널 정의: 모든 채널을 같은 줄(분모 → 반응 → 행동 → 전환)로 맞춘다 ──
+const CH = {
+  kakao:    {label:'카카오톡', aud:'HCP', base:'발송', reaction:'열람', action:'클릭', conv:'자료 받기', min:200},
+  lms:      {label:'문자(LMS)', aud:'HCP', base:'발송', reaction:null, action:'링크 클릭', conv:'문의', min:200},
+  email:    {label:'HCP 이메일', aud:'HCP', base:'발송', reaction:'오픈', action:'클릭', conv:'자료 요청', min:200},
+  linkedin: {label:'링크드인', aud:'HCP', base:'노출', reaction:'참여', action:'클릭', conv:null, min:1000},
+  instagram:{label:'인스타(오가닉)', aud:'대중', base:'도달', reaction:'참여', action:'링크 클릭', conv:null, min:1000},
+  meta_ads: {label:'Meta 광고', aud:'대중', base:'노출', reaction:'링크 클릭(CTR)', action:'랜딩 도착', conv:'구매', min:5000, ads:true, actionDenom:'reaction'}
+};
+const DEFAULT_GOALS = { // 예시 목표 — 관리자가 정한다 (r-6)
+  kakao:{r:40,a:8}, lms:{a:3}, email:{r:25,a:4}, linkedin:{r:2,a:0.6},
+  instagram:{r:4,a:0.8}, meta_ads:{r:1.2,a:70,c:2,cpa:60000}
+};
+const RULES = [
+  ['r-1','한 번으로 판단하지 않아요','한 기간만 목표에 못 미치면 「지켜보기」. 같은 일이 2회 이어지면 그때 말해요. 분모가 적으면 「아직 모름」.'],
+  ['r-2','같은 채널 · 같은 청중끼리만 비교해요','카카오 열람률과 인스타 참여율을 나란히 놓고 이기고 지는 걸 말하지 않아요.'],
+  ['r-3','반응은 되는데 행동이 없으면 문구 · 버튼 · 랜딩부터','주제를 버리기 전에 첫 장 · 버튼 문구 · 도착 페이지를 먼저 고쳐요.'],
+  ['r-4','반응이 낮으면 미리보기 · 첫 문장 · 시간부터','열람 · 참여가 낮으면 제목 · 미리보기 문구 · 보낸 시간을 먼저 봐요.'],
+  ['r-5','2회 연속 반응도 행동도 못 미치면 중단 후보','끌지는 관리자가 정해요. AI는 후보로만 올려요.'],
+  ['r-6','목표는 관리자가 정해요','목표가 없으면 높다 · 낮다를 말하지 않아요.'],
+  ['r-7','(광고) 빈도 3 이상 + 클릭률 20% 넘게 하락 = 소재 피로','같은 소재를 계속 본 사람이 많아요. 새 소재를 만들어요.'],
+  ['r-8','(광고) 지출이 늘었다 ≠ 예산을 올렸다','변경 기록을 보기 전에는 예산 변경이라고 말하지 않아요.'],
+  ['r-9','두 채널 이상에서 같이 부진하면 메시지 문제','채널 각색이 아니라 콘텐츠 메시지 자체를 기획자가 다시 봐요.']
+];
+const SAMPLE = `period,content,title,channel,base,reaction,action,conversion,spend,frequency
+2026-10-20,C-001,바르는 순서편,kakao,1200,540,120,30,,
+2026-10-27,C-001,바르는 순서편,kakao,1300,598,135,34,,
+2026-10-20,C-001,바르는 순서편,lms,900,,36,6,,
+2026-10-27,C-001,바르는 순서편,lms,950,,38,7,,
+2026-10-20,C-001,바르는 순서편,email,400,124,20,3,,
+2026-10-27,C-001,바르는 순서편,email,420,126,19,4,,
+2026-10-20,C-001,바르는 순서편,linkedin,2000,30,6,,,
+2026-10-27,C-001,바르는 순서편,linkedin,2100,29,5,,,
+2026-10-20,C-001,바르는 순서편,instagram,8000,400,30,,,
+2026-10-27,C-001,바르는 순서편,instagram,8600,447,31,,,
+2026-10-20,C-001,바르는 순서편,meta_ads,40000,600,470,11,480000,1.8
+2026-10-27,C-001,바르는 순서편,meta_ads,52000,540,410,6,650000,3.4
+2026-10-20,C-002,시작 시점편,kakao,1100,330,44,5,,
+2026-10-27,C-002,시작 시점편,kakao,1150,334,46,6,,
+2026-10-20,C-002,시작 시점편,lms,900,,13,1,,
+2026-10-27,C-002,시작 시점편,lms,920,,14,1,,
+2026-10-27,C-002,시작 시점편,email,150,40,5,0,,
+2026-10-20,C-002,시작 시점편,instagram,3000,60,10,,,
+2026-10-27,C-002,시작 시점편,instagram,3200,64,11,,,
+2026-10-27,C-003,관리 기간편,kakao,1250,600,112,25,,
+2026-10-27,C-003,관리 기간편,linkedin,1500,45,12,,,
+2026-10-27,C-003,관리 기간편,instagram,7000,210,63,,,
+2026-10-27,C-004,자외선편,instagram,9000,500,90,,,
+2026-10-27,C-004,자외선편,meta_ads,30000,420,85,1,300000,1.5`;
+
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem('yui-dash:'+k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem('yui-dash:'+k,JSON.stringify(v)); }catch(e){} }
+};
+const S = {
+  aud:'all', tab:'office', csv:SAMPLE, errors:[], results:[], proposals:[],
+  goals: store.get('goals', JSON.parse(JSON.stringify(DEFAULT_GOALS))),
+  decisions: store.get('decisions', {}),
+  log:[], clock:9*60, step:0, timer:null
+};
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct = v => v==null||!isFinite(v) ? '–' : (v*100).toFixed(v<0.01?2:1)+'%';
+const won = v => v==null||!isFinite(v) ? '–' : Math.round(v).toLocaleString('ko-KR')+'원';
+const vClass = v => 'v-'+v.replace(/\s/g,'');
+const audOk = a => S.aud==='all' || S.aud===a;
+
+// ── 계산기: 숫자는 AI가 아니라 코드가 낸다 (토큰 0) ──
+function parseCSV(text){
+  const errors=[], rows=[];
+  const lines=text.trim().split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<2){ errors.push('데이터가 비어 있어요. 머리줄과 한 줄 이상이 필요해요.'); return {rows,errors}; }
+  const head=lines[0].split(',').map(h=>h.trim());
+  const need=['period','content','title','channel','base','reaction','action'];
+  const miss=need.filter(n=>!head.includes(n));
+  if(miss.length){ errors.push('필요한 열이 없어요: '+miss.join(', ')+' — 샘플 CSV의 머리줄을 확인하세요.'); return {rows,errors}; }
+  const num=v=>{ v=(v??'').trim(); if(v==='') return null; const n=Number(v.replace(/,/g,'')); return isFinite(n)?n:NaN; };
+  lines.slice(1).forEach((l,i)=>{
+    const c=l.split(','), o={}; head.forEach((h,j)=>o[h]=(c[j]??'').trim());
+    if(!CH[o.channel]){ errors.push(`${i+2}번째 줄: 모르는 채널 「${o.channel}」 — kakao · lms · email · linkedin · instagram · meta_ads 중 하나`); return; }
+    const r={period:o.period,content:o.content,title:o.title,channel:o.channel,
+      base:num(o.base),reaction:num(o.reaction),action:num(o.action),conversion:num(o.conversion),spend:num(o.spend),frequency:num(o.frequency)};
+    if(!(r.base>0) || [r.reaction,r.action,r.conversion,r.spend,r.frequency].some(Number.isNaN)){ errors.push(`${i+2}번째 줄: 숫자가 아닌 값이나 0 이하 분모가 있어요`); return; }
+    rows.push(r);
+  });
+  return {rows,errors};
+}
+function rates(r){
+  const cfg=CH[r.channel];
+  const rr = cfg.reaction && r.reaction!=null ? r.reaction/r.base : null;
+  const den = cfg.actionDenom==='reaction' ? r.reaction : r.base;
+  const ar = r.action!=null && den ? r.action/den : null;
+  const cr = r.conversion!=null && r.action ? r.conversion/r.action : null;
+  const cpa = r.spend && r.conversion ? r.spend/r.conversion : null;
+  return {rr,ar,cr,cpa};
+}
+const RANK={'아직 모름':0,'목표 없음':0,'유지':1,'지켜보기':2,'수정':3,'중단 후보':4};
+function analyze(rows){
+  const groups={};
+  rows.forEach(r=>{ (groups[r.content+'|'+r.channel] ||= []).push(r); });
+  const results=[];
+  for(const key in groups){
+    const g=groups[key].sort((a,b)=>a.period.localeCompare(b.period));
+    const cur=g[g.length-1], prev=g.length>1?g[g.length-2]:null;
+    const cfg=CH[cur.channel], goal=S.goals[cur.channel]||{};
+    const R1=rates(cur), R0=prev?rates(prev):null;
+    const res={content:cur.content,title:cur.title,channel:cur.channel,aud:cfg.aud,cur,prev,R1,R0,verdict:'유지',rules:[],notes:[],fix:null};
+    const up=(v,rule,note)=>{ if(RANK[v]>RANK[res.verdict]) res.verdict=v; if(rule&&!res.rules.includes(rule)) res.rules.push(rule); if(note) res.notes.push(note); };
+    const hasGoal = goal.a!=null || goal.r!=null;
+    if(!hasGoal){ res.verdict='목표 없음'; res.rules.push('r-6'); res.notes.push('목표가 없어 판정하지 않아요'); results.push(res); continue; }
+    if(cur.base<cfg.min){ res.verdict='아직 모름'; res.rules.push('r-1'); res.notes.push(`${cfg.base} ${cur.base.toLocaleString()} — 기준 ${cfg.min.toLocaleString()} 미만`); results.push(res); continue; }
+    const miss=R=>({r: goal.r!=null && R.rr!=null && R.rr*100<goal.r, a: goal.a!=null && R.ar!=null && R.ar*100<goal.a});
+    const m1=miss(R1), m0=(prev && prev.base>=cfg.min)?miss(R0):null;
+    const hasR=!!cfg.reaction;
+    const bad=m=> hasR ? (m.r&&m.a) : m.a;
+    if(bad(m1) && m0 && bad(m0)){
+      up('중단 후보','r-5','2회 연속 반응 · 행동 모두 목표 미달'); res.fix='stop';
+    } else if(m1.r||m1.a){
+      const rule = m1.r ? 'r-4' : 'r-3';
+      const why = m1.r ? `${cfg.reaction} ${pct(R1.rr)} < 목표 ${goal.r}%` : `${cfg.action}률 ${pct(R1.ar)} < 목표 ${goal.a}%`;
+      if(m0 && (m0.r||m0.a)){ up('수정',rule,why+' (2회째)'); res.fix=rule; }
+      else { up('지켜보기','r-1',why+' — 1회째라 지켜봐요'); res.rules.push(rule); }
+    }
+    if(cfg.ads){
+      if(prev && R0 && cur.frequency>=3 && R0.rr && R1.rr<R0.rr*0.8){
+        up('수정','r-7',`빈도 ${cur.frequency} · CTR ${pct(R0.rr)} → ${pct(R1.rr)}`); res.fix=res.fix||'r-7';
+        if(res.fix!=='stop') res.fix='r-7';
+      }
+      if(goal.c!=null && cur.conversion!=null){
+        if(cur.action>=100){ if(R1.cr*100<goal.c){ up('수정','r-3',`구매율 ${pct(R1.cr)} < 목표 ${goal.c}% — 랜딩부터`); if(!res.fix) res.fix='r-3'; } }
+        else res.notes.push(`구매율은 랜딩 도착 ${cur.action}건이라 판단 보류 (r-1)`);
+      }
+      if(goal.cpa && R1.cpa && cur.action>=100 && R1.cpa>goal.cpa) res.notes.push(`CPA ${won(R1.cpa)} > 목표 ${won(goal.cpa)}`);
+      if(prev && prev.spend && cur.spend>prev.spend*1.3){ res.notes.push(`지출 ${Math.round((cur.spend/prev.spend-1)*100)}% 증가 — 예산 변경인지는 변경 기록 확인 전엔 모름`); if(!res.rules.includes('r-8')) res.rules.push('r-8'); }
+    }
+    results.push(res);
+  }
+  results.sort((a,b)=>a.content.localeCompare(b.content)||Object.keys(CH).indexOf(a.channel)-Object.keys(CH).indexOf(b.channel));
+  return results;
+}
+function buildProposals(results){
+  const P=[];
+  const owner=r=> r.fix==='stop' ? '관리자(유이)' : (r.aud==='HCP' ? '제작자 · 약사용' : '제작자 · 대중용');
+  const todo={ 'r-3':'첫 장 · 버튼 문구 · 도착 페이지를 고친 v2 만들기', 'r-4':'제목 · 미리보기 문구 2안 + 보내는 시간 바꿔 보기',
+               'r-7':'새 소재 2안 (첫 장면 바꾸기) — 대중 광고 심의 규칙으로 리뷰 먼저', 'stop':'이 채널에서 이 콘텐츠를 멈출지 결정' };
+  results.filter(r=>r.verdict==='수정'||r.verdict==='중단 후보').forEach(r=>{
+    P.push({id:`${r.content}-${r.channel}`, content:r.content, title:r.title, scope:CH[r.channel].label, aud:r.aud,
+      owner:owner(r), text:todo[r.fix]||'원인 확인', rules:r.rules.join(' · '), evidence:r.notes.join(' / ')});
+  });
+  const by={}; results.forEach(r=>{ if(r.fix==='stop'||r.fix==='r-4') (by[r.content] ||= []).push(r); });
+  for(const c in by){ if(by[c].length>=2){
+    P.push({id:`${c}-message`, content:c, title:by[c][0].title, scope:'콘텐츠 전체', aud:'공통', owner:'기획자',
+      text:'채널마다 따로 고치기 전에 메시지 자체를 다시 보기 — 약사가 실제로 묻는 질문과 맞는지', rules:'r-9',
+      evidence: by[c].map(r=>CH[r.channel].label).join(' · ')+'에서 같이 부진'});
+  }}
+  return P;
+}
+function run(){
+  const {rows,errors}=parseCSV(S.csv);
+  S.errors=errors; S.results=analyze(rows); S.proposals=buildProposals(S.results);
+  const pending=S.proposals.filter(p=>!S.decisions[p.id]).length;
+  addLog('분석가',`계산기로 ${rows.length}줄 집계 → 판정 ${S.results.length}건 · 제안 ${S.proposals.length}건 (승인 대기 ${pending})`);
+  setAgent('analyst','승인대기',`판정 ${S.results.length}건 · 제안 ${S.proposals.length}건 → 관리자 승인함`);
+  render();
+}
+
+// ── 사무실: 감독관이 상태를 보고 다음 일을 고른다 ──
+const AGENTS = [
+  {id:'boss', room:'manager', name:'유이 (관리자)', emoji:'🧑‍💼', line:'공통', status:'대기', task:'승인 · 보류 · 반대만 해요', learned:null, human:true},
+  {id:'sup', room:'sup', name:'감독관', emoji:'🧭', line:'공통', status:'작업중', task:'아침 점검 준비', learned:6},
+  {id:'plan', room:'plan', name:'기획자', emoji:'💡', line:'공통', status:'대기', task:'—', learned:4},
+  {id:'strat', room:'plan', name:'전략가', emoji:'♟️', line:'공통', status:'대기', task:'월 1회 (다음: 12/1)', learned:2},
+  {id:'res', room:'research', name:'조사원', emoji:'🔎', line:'공통', status:'대기', task:'—', learned:5},
+  {id:'mkH', room:'studio', name:'제작자 · 약사용', emoji:'🎨', line:'HCP', status:'대기', task:'—', learned:7},
+  {id:'mkP', room:'studio', name:'제작자 · 대중용', emoji:'🎬', line:'대중', status:'대기', task:'—', learned:3},
+  {id:'rev', room:'review', name:'리뷰어', emoji:'⚖️', line:'공통', status:'대기', task:'규칙집 2권: 약사용 · 대중 광고', learned:9},
+  {id:'analyst', room:'analysis', name:'분석가', emoji:'📊', line:'공통', status:'대기', task:'—', learned:9},
+  {id:'learn', room:'learn', name:'러닝 담당', emoji:'📚', line:'공통', status:'대기', task:'—', learned:3}
+];
+const ROOMS = [
+  ['manager','관리자실'],['sup','감독관 데스크'],['plan','기획실'],['research','조사실'],
+  ['studio','제작 스튜디오',true],['review','심의실'],['analysis','분석실'],['learn','러닝 라운지',true]
+];
+const SUP_NOTES = [];
+const SCRIPT = [
+  {who:'sup', st:'작업중', task:'모든 건 상태 · 기한 · 빠진 칸 점검', log:'아침 점검: 진행 중 4건 · 기한 넘긴 것 1건(C-004 리뷰 대기 3일)', note:'C-004 리뷰 대기 3일 → 리뷰어 우선 배정'},
+  {who:'rev', st:'작업중', task:'C-004 자외선편 · 대중 광고 규칙집으로 판정', log:'감독관 → 리뷰어: C-004 먼저'},
+  {who:'analyst', st:'작업중', task:'지난주 성과 CSV 계산 중 (토큰 0)', log:'분석가: 6개 채널 성과 파일 받음', run:true},
+  {who:'rev', st:'승인대기', task:'C-004: 차단 0 · 권고 2 → 사람 심의 대기', log:'리뷰어: C-004 차단 0 · 권고 2 — 대중 대상이라 의료기기 광고 사전심의 필요 표시', inbox:1},
+  {who:'sup', st:'작업중', task:'분석 결과에서 다음 일 배정', log:'감독관: C-002가 여러 채널에서 같이 부진 → 기획자에게 메시지 재검토 배정', note:'C-002 메시지 문제(r-9) → 기획자'},
+  {who:'plan', st:'작업중', task:'C-002 메시지 재검토 · 약사 질문 목록과 대조', log:'기획자: C-002 「시작 시점」 질문이 실제 질문 상위에 없음 → 다른 각도 2안'},
+  {who:'res', st:'작업중', task:'C-002 새 각도의 근거 찾기 (웹은 Aside)', log:'조사원: 허가 사항 안에서 쓸 수 있는 근거 3건 · 「확인 필요」 1건'},
+  {who:'mkH', st:'작업중', task:'C-001 링크드인 · 카카오 틀에 빈칸만 채우기', log:'제작자 · 약사용: 틀 재사용 — 새 생성 없이 빈칸 6개만 채움 (토큰 적음)'},
+  {who:'mkP', st:'작업중', task:'C-001 Meta 새 소재 2안 (r-7 소재 피로)', log:'제작자 · 대중용: 같은 메시지 · 다른 첫 장면 2안 → 리뷰어에게'},
+  {who:'rev', st:'작업중', task:'C-001 대중 소재 2안 판정', log:'리뷰어: 1안 차단(효능 단정 표현) · 2안 통과 → 1안은 제작자에게 반려'},
+  {who:'learn', st:'작업중', task:'오늘 반려 · 결정 정리', log:'러닝 담당: 「효능 단정」 표현을 대중용 금지 표현에 추가 제안 → 관리자 승인함', inbox:1, learnFor:'learn'},
+  {who:'sup', st:'작업중', task:'하루 마감 점검', log:'감독관 마감: 완료 5 · 승인 대기 정리 · 내일 첫 일 = C-002 새 각도 원고', note:'내일: C-002 새 각도 원고 (제작자 · 약사용)'}
+];
+function setAgent(id,st,task){ const a=AGENTS.find(x=>x.id===id); if(a){ a.status=st; a.task=task; } }
+function addLog(who,text){ const t=S.clock; S.log.unshift(`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')} · ${who} · ${text}`); }
+function stepOffice(){
+  if(S.step>=SCRIPT.length){ stopPlay(); return; }
+  const e=SCRIPT[S.step++]; S.clock+=35;
+  AGENTS.forEach(a=>{ if(!a.human && a.status==='작업중' && a.id!==e.who) a.status='대기'; });
+  setAgent(e.who,e.st,e.task);
+  const name=AGENTS.find(a=>a.id===e.who).name;
+  if(e.run){ run(); return; }
+  addLog(name,e.log);
+  if(e.note) SUP_NOTES.unshift(e.note);
+  if(e.inbox) S.extraInbox=(S.extraInbox||0)+e.inbox;
+  if(e.learnFor){ const a=AGENTS.find(x=>x.id==='rev'); a.learned++; }
+  render();
+}
+function play(){ if(S.timer) return stopPlay(); S.timer=setInterval(stepOffice,1300); render(); }
+function stopPlay(){ clearInterval(S.timer); S.timer=null; render(); }
+function resetOffice(){ stopPlay(); S.step=0; S.clock=9*60; S.log=[]; S.extraInbox=0; SUP_NOTES.length=0;
+  AGENTS.forEach(a=>{ if(!a.human){ a.status=a.id==='sup'?'작업중':'대기'; a.task=a.id==='sup'?'아침 점검 준비':(a.id==='rev'?'규칙집 2권: 약사용 · 대중 광고':(a.id==='strat'?'월 1회 (다음: 12/1)':'—')); } }); render(); }
+
+function inboxCount(){ return S.proposals.filter(p=>!S.decisions[p.id]).length + (S.extraInbox||0); }
+function renderOffice(){
+  const desk=a=>`<div class="desk st-${a.status} ${a.line!=='공통'&&!audOk(a.line)?'dim':''}">
+    <div class="who"><span class="avatar">${a.emoji}</span>${esc(a.name)} <span class="dot" title="${a.status}"></span></div>
+    <div class="row small" style="margin-top:4px"><span class="chip aud-${a.line}">${a.line}</span><span class="muted">${a.status}</span>${a.learned!=null?`<span class="muted">· 익힌 규칙 ${a.learned}</span>`:''}</div>
+    <div class="task">${esc(a.task)}</div>
+    ${a.id==='sup'&&SUP_NOTES.length?`<div class="bubble"><ul>${SUP_NOTES.slice(0,3).map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:''}
+    ${a.id==='boss'?`<div class="inbox" style="margin-top:6px">승인함 <b>${inboxCount()}</b> 건 <button class="btn small" data-go="perf">열기</button></div>`:''}
+  </div>`;
+  document.getElementById('office').innerHTML=`
+  <div class="card"><div class="row" style="justify-content:space-between">
+    <div><h2 style="margin:0">오늘의 사무실</h2><div class="small muted">감독관이 상태 파일을 보고 다음 일을 고르면 팀원이 움직여요. 위의 「약사 · 대중」을 누르면 그 라인 팀원만 밝게 보여요.</div></div>
+    <div class="row"><button class="btn primary" id="play">${S.timer?'⏸ 멈춤':'▶ 하루 돌려 보기'}</button><button class="btn" id="step">한 칸씩</button><button class="btn" id="reset">처음부터</button></div>
+  </div></div>
+  <div class="office">${ROOMS.map(([id,label,wide])=>`<div class="room ${wide?'span2':''}"><h3>${label}</h3>${AGENTS.filter(a=>a.room===id).map(desk).join('')}</div>`).join('')}</div>
+  <div class="card" style="margin-top:14px"><h2>업무 기록</h2><div class="log">${S.log.length?S.log.map(l=>`<div>${esc(l)}</div>`).join(''):'<span class="muted">▶ 하루 돌려 보기를 눌러 보세요.</span>'}</div></div>`;
+}
+
+function renderPerf(){
+  const R=S.results.filter(r=>audOk(r.aud));
+  const chans=Object.keys(CH).filter(c=>audOk(CH[c].aud));
+  const contents=[...new Map(R.map(r=>[r.content,r.title])).entries()];
+  const count=v=>R.filter(r=>r.verdict===v).length;
+  const P=S.proposals.filter(p=>p.aud==='공통'||audOk(p.aud));
+  const cell=(c,ch)=>{ const r=R.find(x=>x.content===c&&x.channel===ch); if(!r) return '<td class="muted">·</td>';
+    const k = CH[ch].reaction ? pct(r.R1.rr) : pct(r.R1.ar);
+    return `<td><div class="cell"><span class="chip ${vClass(r.verdict)}">${r.verdict}</span><span class="small muted">${k}</span></div></td>`; };
+  document.getElementById('perf').innerHTML=`
+  <div class="card"><h2>1. 데이터 넣기</h2>
+    <div class="small muted">채널마다 내보낸 성과를 한 줄 형식(분모 → 반응 → 행동 → 전환)으로 맞춰 넣어요. 지금은 샘플이에요. Meta 광고는 시뮬레이션 숫자예요.</div>
+    <details style="margin-top:8px"><summary>CSV 보기 · 고치기</summary><textarea id="csv">${esc(S.csv)}</textarea></details>
+    <div class="row" style="margin-top:8px"><button class="btn primary" id="run">▶ 실행 (계산기 → 판단 규칙)</button>
+      <label class="btn">파일 열기<input type="file" id="file" accept=".csv" hidden></label><button class="btn" id="sample">샘플 다시 넣기</button></div>
+    ${S.errors.map(e=>`<div class="err">⚠️ ${esc(e)}</div>`).join('')}
+    ${!S.results.length&&!S.errors.length?'<div class="err">결과가 없어요. 실행을 눌러 주세요.</div>':''}
+  </div>
+  <div class="card"><h2>2. 한눈에 — ${S.aud==='all'?'전체':S.aud==='HCP'?'약사 · HCP 라인':'대중 라인'}</h2>
+    <div class="tiles">${['유지','지켜보기','수정','중단 후보','아직 모름'].map(v=>`<div class="tile"><span class="chip ${vClass(v)}">${v}</span><b>${count(v)}</b></div>`).join('')}
+      <div class="tile"><span class="chip aud-공통">승인 대기</span><b>${P.filter(p=>!S.decisions[p.id]).length}</b></div></div>
+  </div>
+  <div class="card"><h2>3. 콘텐츠 하나 → 채널별 베리에이션</h2>
+    <div class="small muted">칸 아래 숫자는 그 채널의 반응률(문자는 클릭률)이에요. 채널끼리는 비교하지 않아요 (r-2).</div>
+    <div class="scroll"><table class="matrix"><tr><th>콘텐츠</th>${chans.map(c=>`<th><span class="chip aud-${CH[c].aud}">${CH[c].aud}</span><br>${CH[c].label}</th>`).join('')}</tr>
+    ${contents.map(([c,t])=>`<tr><td><b>${c}</b><br><span class="small muted">${esc(t)}</span></td>${chans.map(ch=>cell(c,ch)).join('')}</tr>`).join('')}</table></div>
+  </div>
+  <div class="card"><h2>4. 관리자 승인함 — 할 일 제안</h2>
+    ${P.length?P.map(p=>{ const d=S.decisions[p.id]; return `<div class="prop ${d?'done':''}">
+      <div class="row"><b>${p.content} ${esc(p.title)}</b><span class="chip aud-${p.aud}">${esc(p.scope)}</span><span class="small muted">담당: ${esc(p.owner)} · ${p.rules}</span></div>
+      <div style="margin:4px 0">${esc(p.text)}</div><div class="small muted">근거: ${esc(p.evidence)}</div>
+      ${d?`<div class="small" style="margin-top:6px">결정: <b>${d.choice}</b>${d.reason?' · 이유: '+esc(d.reason):''} <button class="btn small" data-undo="${p.id}">되돌리기</button></div>`:
+      `<div class="row" style="margin-top:6px"><input type="text" placeholder="이유 (러닝 재료가 돼요)" id="why-${p.id}">
+        ${['승인','보류','반대'].map(c=>`<button class="btn" data-decide="${p.id}" data-choice="${c}">${c}</button>`).join('')}</div>`}
+    </div>`; }).join(''):'<span class="muted">제안이 없어요.</span>'}
+  </div>
+  <div class="card"><h2>5. 판정 근거 (전체 표)</h2><div class="scroll"><table>
+    <tr><th>콘텐츠</th><th>채널</th><th>기간</th><th>분모</th><th>반응률 (목표)</th><th>행동률 (목표)</th><th>전환 · CPA</th><th>지난 기간</th><th>판정</th><th>규칙 · 근거</th></tr>
+    ${R.map(r=>{ const c=CH[r.channel], g=S.goals[r.channel]||{};
+      return `<tr><td>${r.content}</td><td><span class="chip aud-${r.aud}">${r.aud}</span> ${c.label}</td><td>${r.cur.period}</td>
+      <td class="num">${c.base} ${r.cur.base.toLocaleString()}</td>
+      <td class="num">${c.reaction?pct(r.R1.rr)+` <span class="muted">(${g.r??'–'}%)</span>`:'<span class="muted">해당 없음</span>'}</td>
+      <td class="num">${pct(r.R1.ar)} <span class="muted">(${g.a??'–'}%)</span></td>
+      <td class="num">${c.conv&&r.cur.conversion!=null?`${c.conv} ${r.cur.conversion}`:'–'}${r.R1.cpa?'<br>'+won(r.R1.cpa):''}</td>
+      <td class="num">${r.R0?(c.reaction?pct(r.R0.rr)+' / ':'')+pct(r.R0.ar):'<span class="muted">없음</span>'}</td>
+      <td><span class="chip ${vClass(r.verdict)}">${r.verdict}</span></td>
+      <td class="small">${r.rules.join(' · ')}<br><span class="muted">${esc(r.notes.join(' / '))}</span></td></tr>`; }).join('')}
+  </table></div></div>
+  <div class="card"><details><summary>목표 (관리자가 정함 · 지금은 예시)</summary><div class="scroll"><table>
+    <tr><th>채널</th><th>반응률 %</th><th>행동률 %</th><th>구매율 %</th><th>목표 CPA</th></tr>
+    ${Object.keys(CH).map(ch=>{ const g=S.goals[ch]||{}; const f=(k,dis)=>dis?'<span class="muted">–</span>':`<input type="number" step="0.1" data-goal="${ch}" data-k="${k}" value="${g[k]??''}">`;
+      return `<tr><td><span class="chip aud-${CH[ch].aud}">${CH[ch].aud}</span> ${CH[ch].label}</td><td>${f('r',!CH[ch].reaction)}</td><td>${f('a')}</td><td>${f('c',!CH[ch].ads)}</td><td>${f('cpa',!CH[ch].ads)}</td></tr>`; }).join('')}
+  </table></div><div class="row" style="margin-top:8px"><button class="btn" id="goalReset">예시 목표로 되돌리기</button><span class="small muted">바꾸면 바로 다시 판정해요.</span></div></details></div>
+  <div class="card"><details><summary>판단 규칙 r-1 ~ r-9</summary><table>${RULES.map(([id,t,d])=>`<tr><td><b>${id}</b></td><td><b>${t}</b><br><span class="small muted">${d}</span></td></tr>`).join('')}</table></details></div>`;
+}
+
+function render(){
+  document.getElementById('office').hidden = S.tab!=='office';
+  document.getElementById('perf').hidden = S.tab!=='perf';
+  document.querySelectorAll('#tabs button[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===S.tab));
+  document.querySelectorAll('#audSeg button').forEach(b=>b.classList.toggle('on',b.dataset.aud===S.aud));
+  renderOffice(); renderPerf();
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button'); if(!t) return;
+  if(t.dataset.tab){ S.tab=t.dataset.tab; render(); }
+  else if(t.dataset.aud){ S.aud=t.dataset.aud; render(); }
+  else if(t.dataset.go){ S.tab=t.dataset.go; render(); }
+  else if(t.id==='play') play();
+  else if(t.id==='step') stepOffice();
+  else if(t.id==='reset') resetOffice();
+  else if(t.id==='run'){ const ta=document.getElementById('csv'); if(ta) S.csv=ta.value; run(); }
+  else if(t.id==='sample'){ S.csv=SAMPLE; run(); }
+  else if(t.id==='goalReset'){ S.goals=JSON.parse(JSON.stringify(DEFAULT_GOALS)); store.set('goals',S.goals); run(); }
+  else if(t.dataset.decide){
+    const id=t.dataset.decide, reason=(document.getElementById('why-'+id)||{}).value||'';
+    S.decisions[id]={choice:t.dataset.choice,reason}; store.set('decisions',S.decisions);
+    addLog('유이 (관리자)',`${id} → ${t.dataset.choice}${reason?' · '+reason:''}`);
+    if(t.dataset.choice!=='승인'||reason) addLog('러닝 담당',`${id} 결정 이유를 규칙 후보로 기록`);
+    render();
+  }
+  else if(t.dataset.undo){ delete S.decisions[t.dataset.undo]; store.set('decisions',S.decisions); render(); }
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='file' && t.files[0]){ const fr=new FileReader(); fr.onload=()=>{ S.csv=String(fr.result); run(); }; fr.readAsText(t.files[0]); }
+  if(t.dataset.goal){ const g=(S.goals[t.dataset.goal] ||= {}); const v=t.value.trim(); if(v==='') delete g[t.dataset.k]; else g[t.dataset.k]=Number(v); store.set('goals',S.goals); run(); }
+});
+S.log=[]; run(); S.log=[]; setAgent('analyst','대기','—'); render();
+</script>
+</body>
+</html>
