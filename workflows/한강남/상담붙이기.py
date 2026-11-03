@@ -122,7 +122,7 @@ def 대시보드(소재표, 일별, 추정, 샘플):
         막힌, 근거 = 판정(c, 평균ctr)
         줄.append(f"<tr><td>{html.escape(이름)}</td><td>{원(c['노출'])}</td><td>{원(c['클릭'])}</td>"
                  f"<td>{c['클릭']/c['노출']*100 if c['노출'] else 0:.2f}%</td><td>{원(c['비용'])}</td>"
-                 f"<td>{c['상담']:.1f}</td><td>{c['계약']:.1f}</td>".replace(".0<", "<")
+                 f"<td>{c['상담']:.{1 if 추정 else 0}f}</td><td>{c['계약']:.{1 if 추정 else 0}f}</td>"
                  f"<td>{원(c['비용']/c['상담'] if c['상담'] else 0)}</td><td>{원(c['비용']/c['계약'] if c['계약'] >= 0.5 else 0)}</td>"
                  f"<td>{막힌}</td><td>{html.escape(근거)}</td></tr>")
     일 = "".join(f"<tr><td>{d}</td><td>{원(c['비용'])}</td><td>{원(c['클릭'])}</td><td>{int(c['상담'])}</td><td>{int(c['계약'])}</td>"
